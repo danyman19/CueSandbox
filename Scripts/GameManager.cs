@@ -54,8 +54,13 @@ public class GameManager : MonoBehaviour
 
     void Setup() {
         //Generate Deck
-        for(int i = 0; i < cards.Length;i++)
+
+        //             T1              T2        T3         R2T1        T2        T3
+        int[] order = {11, 9, 4, 5, 7, 10, 2, 8, 17, 12, 16, 13, 14, 0, 18, 15, 3, 6};
+
+        for(int j = 0; j < order.Length;j++)
         {
+            int i = order[j];
             Card cur = new Card(fullDeck, Instantiate(cardPrefab), cards[i], ids[i], new Data(ids[i]));
 
             deck.Enqueue(cur);
@@ -666,6 +671,11 @@ public class Data
             SetInfo("Morelet's Crocodile",7, 65, "epic", "lim");
             //HARD CODED
             AddAbility("draw", (x => x.data.album=="O"||x.data.album=="L"), new Buff(3,-1,19, this.name));
+        }
+        if(id == "LMC109")
+        {
+            SetInfo("Faun", 3, 29, "leg", "lvl");
+            AddAbility("play", (x=>x.inHand), new Buff(4, -1, 17, this.name));
         }
     }
 
