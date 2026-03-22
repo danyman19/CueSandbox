@@ -303,6 +303,8 @@ public class GameManager : MonoBehaviour
                             }
                         }
 
+                        ResetPower();
+
                         incPhase();
                         return;
                     }else DrawCard();
@@ -324,12 +326,27 @@ public class GameManager : MonoBehaviour
                             cur.SetActive(false);
                             cur.EndTurn(turn, true);
                             played.Add(cur);
-                            if(cur.data.name=="Confractosuchus") Debug.Log("setting confac to inhand false");
+                            
                             cur.inHand = false;
                             cur.data.numPlayed++;
                             cur.data.UpdatePlayBuffs();
 
-                            cur.TriggerAbility("return", true);
+                            //bad practice, TODO: make a func for this
+                            if (cur.data.album == "L" || cur.data.album=="P")
+                            {
+                                foreach(Card c in fullDeck)
+                                {
+                                    if (c.GetID() == "LMA064" && cur.data.album=="L")
+                                    {
+                                        c.data.abilites[0].b.power += 3;
+                                    }
+                                    if(c.GetID()=="PLB003" && cur.data.album == "P")
+                                    {
+                                        c.data.abilites[0].b.power -= 10;
+                                        c.data.abilites[1].b.power += 6;
+                                    }
+                                }
+                            }
 
                             deck.Enqueue(cur);
 
@@ -346,6 +363,11 @@ public class GameManager : MonoBehaviour
                         if(played.Contains(cur)) continue;
 
                         cur.EndTurn(turn, false);
+                    }
+
+                    foreach(Card cur in played)
+                    {
+                        cur.TriggerAbility("return", true);
                     }
 
                     // foreach(Card cur in openSlots)
@@ -479,6 +501,7 @@ public class Card {
         foreach(Buff buff in buffs){
             b+= buff.power;
         }
+        if(b<0) b = 0;
         return b;
     }
 
@@ -595,6 +618,19 @@ public class Data
         if (id == "OMA043")
         {
             abilites[0].b.power+=13;
+        }
+        if(id == "LMA055")
+        {
+            abilites[0].b.power = 10;
+        }
+        if(id == "LMA061")
+        {
+            abilites[0].b.power = 16;
+        }
+        if(id == "PAN054")
+        {
+            //HARD CODED
+            abilites[0].b.power = 12;
         }
     }
 
@@ -761,6 +797,102 @@ public class Data
         {
             SetInfo("Ichthyostega", 7, 70, "leg", "lim");
             AddAbility("play", (x=>x.c3("PAN")), new Buff(3, -1, 25, this.name));
+        }
+
+        //great dying deck
+        //0 = this turn, 1 = this round, 2 = x turns left, 3 = until played, 4 = perma
+
+        if(id == "ACLG007")
+        {
+            SetInfo("When Pigs Fly", 8, 65, "leg", "lim");
+            AddAbility("return", (x=>x.c3("LMA")), new Buff(2, 7, 19, this.name));
+        }
+        if(id == "EWW038")
+        {
+            SetInfo("Gobekli Tepe", 5, 47, "rare", "lim");
+            AddAbility("return", (x=>x.c3("LMA")), new Buff(3, -1, 23, this.name));
+        }
+        if(id == "FPA003")
+        {
+            SetInfo("The Jurassic Period", 6, 36, "fusion", "fusion");
+            AddAbility("return", (x=>x.data.album=="L"), new Buff(3, -1, 10, this.name));
+        }
+        if(id == "FPA008")
+        {
+            SetInfo("The Cambrian Explosion", 5, 36, "fusion", "fusion");
+            AddAbility("draw", (x=>x.data.album=="P"||x.data.album=="L"||x.data.album=="O"), new Buff(3, -1, 5, this.name));
+            AddAbility("return", (x=>x.data.album=="P"||x.data.album=="L"||x.data.album=="O"), new Buff(3, -1, 5, this.name));
+        }
+        if(id == "LMA037")
+        {
+            SetInfo("Arabian Horse", 9, 80, "leg", "lim");
+            AddAbility("play", (x=>x.GetID()=="LMA037"), new Buff(1, -1, 100, this.name));
+        }
+        if(id == "LMA050")
+        {
+            SetInfo("Bactrian Camel", 8, 70, "leg", "base");
+            //HARD CODED
+            AddAbility("play", (x=>x.GetID()=="LMA050"), new Buff(0, -1, 55*2, this.name));
+        }
+        if(id == "LMA055")
+        {
+            SetInfo("Cape Buffalo", 7, 67, "epic", "lim");
+            AddAbility("play", (x=>x.c3("LMA")), new Buff(4, -1, 0, this.name));
+        }
+        if(id == "LMA060")
+        {
+            SetInfo("Beaver", 5, 50, "leg", "lim");
+            AddAbility("draw", (x=>x.inHand), new Buff(0, -1, 35, this.name));
+        }
+        if(id == "LMA061")
+        {
+            SetInfo("Dolly the Sheep", 6, 16, "leg", "lim");
+            AddAbility("draw", (x=>x.inHand), new Buff(4, -1, 8, this.name));
+        }
+        if(id == "LMA063")
+        {
+            SetInfo("Thomson's Gazelle", 8, 60, "leg", "lim");
+            AddAbility("play", (x=>x.c3("LMA")), new Buff(3, -1, 18, this.name));
+        }
+        if(id == "LMA064")
+        {
+            SetInfo("Greater Horseshoe Bat", 4, 28, "epic", "lim");
+            AddAbility("draw", (x=>x.GetID()=="LMA064"), new Buff(3, -1, 0, this.name));
+        }
+        if(id == "LMA078")
+        {
+            SetInfo("Svalbard Reindeer", 7, 35, "leg", "lim");
+            AddAbility("play", (x=>x.inHand&&x.data.album=="L"), new Buff(4, -1, 14, this.name));
+        }
+        if(id == "LMA082")
+        {
+            SetInfo("Eastern Grey Squirrel", 5, 36, "leg", "base");
+            AddAbility("draw", (x=>x.GetID()=="LMA082"), new Buff(0, -1, 90, this.name));
+            AddAbility("play", (x=>x.data.album=="L"), new Buff(3, -1, -6, this.name));
+        }
+        if(id == "PAN054")
+        {
+            //HARD CODED
+            SetInfo("Cartorhynchus", 8, 68, "rare", "lim");
+            AddAbility("play", (x=>x.data.album!="P"), new Buff(3, -1, 0, this.name));
+        }
+        if(id == "PIC010")
+        {
+            SetInfo("Megaloceros", 5, 56, "leg", "lim");
+            AddAbility("draw", (x=>x.c3("LMA")), new Buff(3, -1, 24, this.name));
+        }
+        if(id == "PLB003")
+        {
+            SetInfo("Great Dying", 9, 78, "leg", "lim");
+            // x-10
+            AddAbility("return", (x=>x.data.album=="P"), new Buff(4, -1, 0, this.name));
+            // x6
+            AddAbility("return", (x=>x.data.album=="L"||x.data.album=="O"), new Buff(4, -1, 0, this.name));
+        }
+        if(id == "SDD042")
+        {
+            SetInfo("Atomic Theory", 7, 36, "leg", "lim");
+            AddAbility("play", (x=>x.data.album=="L"), new Buff(3, -1, 20, this.name));
         }
     }
     public void AddAbility(string trigger, Func<Card, bool> target, Buff b)
