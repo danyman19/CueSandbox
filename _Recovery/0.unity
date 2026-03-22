@@ -2010,23 +2010,6 @@ MonoBehaviour:
   - {fileID: -5479427943102418904, guid: 9d7317e4ec9cfdf4a9c02e98746273d4, type: 3}
   - {fileID: -1591769308545258402, guid: ee3c885f009d7bf4fa9fd9abd2bf6e33, type: 3}
   - {fileID: 4348660247671746228, guid: afa6fdde19179e74fac0608b848530e2, type: 3}
-  - {fileID: -4771556845926616693, guid: 722eead2fdd0caa45adcbc62e3f92615, type: 3}
-  - {fileID: 8361876981274020356, guid: f88d750388e2af748b599d9d45742b10, type: 3}
-  - {fileID: -5812177700396674530, guid: 9773e9192fd8ab14ab4a5a114a6cf8dc, type: 3}
-  - {fileID: -8121531470483245495, guid: e044ebb0c3d42f74f9f2333d2c29736d, type: 3}
-  - {fileID: -6898216935536972292, guid: 9a25549429cbf5e44b94909f1da5a456, type: 3}
-  - {fileID: 4951675384863085985, guid: 0e35b5065b06d7f4e84c8036cd732e1f, type: 3}
-  - {fileID: 6645750932728830225, guid: d8f0d843f660a924db1b299d1299aa8e, type: 3}
-  - {fileID: 872981423377335715, guid: 8b50ad7d8ae816d4c80d640efc57ba2d, type: 3}
-  - {fileID: 7750879646540636993, guid: 3414a957b9e6c074783f51595ae4901b, type: 3}
-  - {fileID: -303818086715735509, guid: d6055ff021e83ff4f8440e8c5872f23b, type: 3}
-  - {fileID: 3804761730327195099, guid: 031c07a5e466e464bbefc4bc865b1fe9, type: 3}
-  - {fileID: -5931431905492885904, guid: 4ebbcf7619d8f744a9706d9160fc23f5, type: 3}
-  - {fileID: 4122706222203294035, guid: 007288ec46da2f148905066f82d95bc1, type: 3}
-  - {fileID: 5299534344139686849, guid: 443a4acbaca231b499e08ef2a1a3a601, type: 3}
-  - {fileID: -3296413744533920204, guid: 0869e278362688740b74d88087ca9b94, type: 3}
-  - {fileID: 2443107845359338969, guid: 593115a06742fd5488fbab48c00e984f, type: 3}
-  - {fileID: -8699487165574094143, guid: 4ad585335d02acb4da3f811f569690d1, type: 3}
   ids:
   - ECF077
   - LAL045
@@ -2058,23 +2041,6 @@ MonoBehaviour:
   - PLB012
   - PMO031
   - PMO046
-  - ACLG007
-  - EWW038
-  - FPA003
-  - FPA008
-  - LMA037
-  - LMA050
-  - LMA055
-  - LMA060
-  - LMA061
-  - LMA063
-  - LMA064
-  - LMA078
-  - LMA082
-  - PANO54
-  - PIC010
-  - PLB003
-  - SDD042
   phaseText: {fileID: 15223016}
   roundText: {fileID: 1132866763}
   round: 1

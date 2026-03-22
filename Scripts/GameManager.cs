@@ -55,8 +55,20 @@ public class GameManager : MonoBehaviour
     void Setup() {
         //Generate Deck
 
-        //             T1              T2        T3         R2T1        T2        T3
-        int[] order = {11, 9, 4, 5, 7, 10, 2, 8, 17, 12, 16, 13, 14, 0, 18, 15, 3, 6};
+        //ORDERING FOR high score lol/ocean mammals
+        //int[] order = {11, 9, 4, 5, 7, 10, 2, 8, 17, 12, 16, 13, 14, 0, 18, 15, 3, 6};
+
+        //ORDERING FOR paleo test
+        // int[] order = {27, 25, 26, 28, 24, 21, 29, 20, 19, 22, 23};
+
+        //ORDERING FOR great dying deck
+        //carto jurassic cambrian camel squirrel
+        //GD buffalo megalo, svalbard, arabain, thompsons
+        //dolly beaver bat
+        //morelet atomic tepe when pigs fly
+
+        //             T1                  T2          T3          T1
+        int[] order = {43, 32, 33, 35, 42, 45, 36, 44, 41, 34, 39, 38, 37, 40, 17, 46, 31, 30};
 
         for(int j = 0; j < order.Length;j++)
         {
@@ -214,9 +226,12 @@ public class GameManager : MonoBehaviour
                 cur.SetSlot(1);
                 cur.GoTo(slots[i]);
                 cur.SetActive(true);
+
+                if(cur.data.name=="Confractosuchus") Debug.Log("setting confac to inhand true");
                 cur.inHand = true;
                 cur.played = false;
-                cur.TriggerAbility("draw", true);
+                cur.drawTriggered = false;
+                // cur.TriggerAbility("draw", true);
 
                 cur.pSlot = i;
 
@@ -280,6 +295,14 @@ public class GameManager : MonoBehaviour
 
                 if (curPhase == 0) {
                     if(SlotsOpen()==0){
+                        foreach(Card c in openSlots)
+                        {
+                            if(!c.drawTriggered){
+                                c.TriggerAbility("draw", true);
+                                c.drawTriggered = true;
+                            }
+                        }
+
                         incPhase();
                         return;
                     }else DrawCard();
@@ -301,7 +324,7 @@ public class GameManager : MonoBehaviour
                             cur.SetActive(false);
                             cur.EndTurn(turn, true);
                             played.Add(cur);
-
+                            if(cur.data.name=="Confractosuchus") Debug.Log("setting confac to inhand false");
                             cur.inHand = false;
                             cur.data.numPlayed++;
                             cur.data.UpdatePlayBuffs();
@@ -370,6 +393,7 @@ public class Card {
     public int pSlot;
 
     public bool inHand, played;
+    public bool drawTriggered;
 
     public List<Buff> buffs = new List<Buff>();
     
@@ -438,8 +462,10 @@ public class Card {
             {
                 foreach(Card c in deck)
                 {
+                    // if(this.data.name=="Jurassic Coast") Debug.Log(c.data.name+" "+c.inHand +" "+ (c.data.album=="P"));
                     if (ability.target(c))
                     {
+                        // if(this.data.name=="Jurassic Coast") Debug.Log("applying to "+c.data.name);
                         c.AddBuff(ability.b, pos);
                     }
                 }
@@ -483,7 +509,7 @@ public class Card {
 
     public string buffText()
     {
-        string o = "["+id+"] => "+this.data.name;
+        string o = "["+id+"] => "+this.data.name+" ("+this.data.album;
         foreach(Buff b in buffs)
         {
             o+="\n";
@@ -590,6 +616,7 @@ public class Data
         //0 = this turn, 1 = this round, 2 = x turns left, 3 = until played, 4 = perma
         SetAlbCol();
 
+        //GREEN BLUE OCEAN MAMMALS
         if (id == "ECF077"){
             SetInfo("Zhou Dunyi",7, 60, "leg", "lim");
             AddAbility("play",(x => x.data.album!="E"), new Buff(3,-1,17, this.name));
@@ -677,8 +704,65 @@ public class Data
             SetInfo("Faun", 3, 29, "leg", "lvl");
             AddAbility("play", (x=>x.inHand), new Buff(4, -1, 17, this.name));
         }
-    }
 
+        //PALEO TEST
+        if(id == "FPA001")
+        {
+            SetInfo("Jurassic Coast", 5, 53, "fusion", "fusion");
+            AddAbility("draw", (x=>x.inHand && x.data.album=="P"), new Buff(3, -1, 30, this.name));
+        }
+        if(id == "PAN015")
+        {
+            SetInfo("Woolly Mammoth", 8, 83, "leg", "lim");
+            AddAbility("play", (x=>x.c3("PAN")&&x.data.basePower>=60), new Buff(3, -1, 24, this.name));
+        }
+        if(id == "PAN016")
+        {
+            SetInfo("Megacerops", 3, 27, "rare", "lim");
+            AddAbility("play", (x=>x.c3("PAN")), new Buff(3, -1, 20, this.name));
+        }
+        if(id == "PAN032")
+        {
+            SetInfo("Dodo", 7, 32, "leg", "lim");
+            AddAbility("draw", (x=>x.data.album=="P"), new Buff(0, -1, 33, this.name));
+        }
+        if(id == "PAN046")
+        {
+            SetInfo("Confractosuchus", 8, 70, "leg", "lim");
+            AddAbility("draw", (x=>x.GetID()=="PAN046"), new Buff(3, -1, 20*5, this.name));
+        }
+        if(id == "PAN064")
+        {
+            SetInfo("Falkland Islands Wolf", 8, 140, "leg", "lim");
+        }
+        if(id == "PFF029")
+        {
+            SetInfo("Yanornis", 3, 30, "leg", "lim");
+            AddAbility("play", (x=>x.data.album=="P"), new Buff(3, -1, 18, this.name));
+        }
+        if(id == "PHE050")
+        {
+            SetInfo("Torosaurus", 9, 80, "leg", "lim");
+            AddAbility("play", (x=>x.data.album=="P"), new Buff(3, -1, 18, this.name));
+        }
+        if(id == "PLB012")
+        {
+            SetInfo("Flaming Cliffs", 6, 25, "leg", "lim");
+            //hard coded (im lazy)
+            AddAbility("draw", (x=>x.data.album=="P"), new Buff(4, -1, 10, this.name));
+            AddAbility("play", (x=>x.data.album=="P"), new Buff(3, -1, 10, this.name));
+        }
+        if(id == "PMO031")
+        {
+            SetInfo("Tully Monster", 7, 69, "leg", "lim");
+            AddAbility("draw", (x=>x.data.basePower>=70), new Buff(3, -1, 22, this.name));
+        }
+        if(id == "PMO046")
+        {
+            SetInfo("Ichthyostega", 7, 70, "leg", "lim");
+            AddAbility("play", (x=>x.c3("PAN")), new Buff(3, -1, 25, this.name));
+        }
+    }
     public void AddAbility(string trigger, Func<Card, bool> target, Buff b)
     {
         abilites.Add(new Ability(trigger, target, b));
@@ -695,6 +779,7 @@ public class Data
 
     public void SetAlbCol()
     {
+        //MYTHICS
         if (id.Substring(0, 2) == "MY")
         {
             if (id.Substring(2, 2) == "SE")
@@ -704,6 +789,27 @@ public class Data
 
             collection = id.Substring(0,4);
 
+            return;
+        }
+
+        //FUSION
+        if(id.Substring(0,1)== "F")
+        {
+            if(id.Substring(1, 2) == "PA")
+            {
+                album = "P";
+            }
+
+            collection = id.Substring(0,3);
+
+            return;
+        }
+
+        //when pigs fly ugh
+        if (id == "ACLG007")
+        {
+            album = "A";
+            collection = "CLG";
             return;
         }
 
