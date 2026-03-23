@@ -52,11 +52,26 @@ public class GameManager : MonoBehaviour
 
     public TMP_Text buffText;
 
+    public static void Shuffle<T>(T[] array)
+    {
+        System.Random rng = new System.Random();
+        int n = array.Length;
+        while (n > 1) 
+        {
+            n--;
+            int k = rng.Next(n + 1); // Pick a random index from 0 to n
+            // Swap values
+            T value = array[k];
+            array[k] = array[n];
+            array[n] = value;
+        }
+    }
+
     void Setup() {
         //Generate Deck
 
         //ORDERING FOR high score lol/ocean mammals
-        //int[] order = {11, 9, 4, 5, 7, 10, 2, 8, 17, 12, 16, 13, 14, 0, 18, 15, 3, 6};
+        // int[] order = {11, 9, 4, 5, 7, 10, 2, 8, 17, 12, 16, 13, 14, 0, 18, 15, 3, 6};
 
         //ORDERING FOR paleo test
         // int[] order = {27, 25, 26, 28, 24, 21, 29, 20, 19, 22, 23};
@@ -69,6 +84,7 @@ public class GameManager : MonoBehaviour
 
         //             T1                  T2          T3          T1
         int[] order = {43, 32, 33, 35, 42, 45, 36, 44, 41, 34, 39, 38, 37, 40, 17, 46, 31, 30};
+        Shuffle<int>(order);
 
         for(int j = 0; j < order.Length;j++)
         {
@@ -275,6 +291,16 @@ public class GameManager : MonoBehaviour
                 
                 round++;
                 turn = 1;
+
+
+                //Hard coded mammals buff
+                if (round == 5)
+                {
+                    foreach(Card cur in fullDeck)
+                    {
+                        if(cur.c3("LMA")) cur.AddBuff(new Buff(1, -1, 100, "Arena Boost"), true);
+                    }
+                }
             }
         }
     }
@@ -627,11 +653,16 @@ public class Data
         {
             abilites[0].b.power = 16;
         }
-        if(id == "PAN054")
-        {
-            //HARD CODED
-            abilites[0].b.power = 12;
-        }
+        // if(id == "PAN054")
+        // {
+        //     //HARD CODED
+        //     abilites[0].b.power = 12;
+        // }
+        // if(id == "LMA060")
+        // {
+        //     if(this.numPlayed==1) abilites[0].b.power = 0;
+        //     else abilites[0].b.power = 35;
+        // }
     }
 
     public void UpdateRoundBuffs(int round)
@@ -874,7 +905,7 @@ public class Data
         {
             //HARD CODED
             SetInfo("Cartorhynchus", 8, 68, "rare", "lim");
-            AddAbility("play", (x=>x.data.album!="P"), new Buff(3, -1, 0, this.name));
+            AddAbility("play", (x=>x.data.album!="P"), new Buff(3, -1, 12, this.name));
         }
         if(id == "PIC010")
         {
@@ -894,6 +925,8 @@ public class Data
             SetInfo("Atomic Theory", 7, 36, "leg", "lim");
             AddAbility("play", (x=>x.data.album=="L"), new Buff(3, -1, 20, this.name));
         }
+
+        //beaver's second should NOT trigger
     }
     public void AddAbility(string trigger, Func<Card, bool> target, Buff b)
     {
